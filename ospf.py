@@ -1,25 +1,25 @@
 #! /usr/bin/env python2.5
 
-##     PyRT: Python Routeing Toolkit
+# PyRT: Python Routeing Toolkit
+#
+# OSPF module: provides the OSPF listener and OSPF PDU parsers
+#
+# Copyright (C) 2001 Richard Mortier <mort@sprintlabs.com>, Sprint ATL
+#
+# This program is free software; you can redistribute it and/or modify it under
+# the terms of the GNU General Public License as published by the Free Software
+# Foundation; either version 2 of the License, or (at your option) any later
+# version.
+#
+# This program is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+# details.
+#
+# You should have received a copy of the GNU General Public License along with
+# this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+# Place, Suite 330, Boston, MA 02111-1307 USA
 
-##     OSPF module: provides the OSPF listener and OSPF PDU parsers
-
-##     Copyright (C) 2010 Richard Mortier <mort@cantab.net>
-
-##     This program is free software; you can redistribute it and/or
-##     modify it under the terms of the GNU General Public License as
-##     published by the Free Software Foundation; either version 2 of the
-##     License, or (at your option) any later version.
-
-##     This program is distributed in the hope that it will be useful,
-##     but WITHOUT ANY WARRANTY; without even the implied warranty of
-##     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-##     General Public License for more details.
-
-##     You should have received a copy of the GNU General Public License
-##     along with this program; if not, write to the Free Software
-##     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
-##     02111-1307 USA
 
 # RFC 1584 -- MOSPF
 # RFC 2328 -- OSPF v2
@@ -32,16 +32,16 @@
 # RFC 3137 -- Stub routers (where metric == 0xffffff > LSInfinity, 0xffff)
 # RFC 3623 -- Graceful restart
 # RFC 3630 -- Traffic engineering extensions
-
+#
 ## LSUPD/LSA notes:
-
+#
 # router id:
 #    the IP address of the router that generated the packet
 # advrtr:
 #    the IP address of the advertising router
 # src:
 #    the IP address of the interface from which the LSUPD came
-
+#
 # link state id (lsid):
 #    identifier for this link (interface) dependent on type of LSA:
 #      1 (router)       ID of router generating LSA
@@ -49,7 +49,7 @@
 #      3 (summary IP)   IP address of link reported as dst
 #      4 (summary ASBR) IP address of reachable ASBR
 #      5 (external AS)  IP address of link reported as dst
-
+#
 # link id:
 #    what is connected to this router by this link, dependent on type
 #      1 (p2p)          ID of neighbour router
@@ -59,10 +59,12 @@
 # link data:
 #    subnet mask if lsid==3; else IP address of the router that
 #    generated the LSA on the advertised link (~= advrtr?)
-
+#
 # summary LSA:
 #    created by ASBR and flooded into area; type 3 report cost to
 #    prefix outside area, type 4 report cost to ASBR
+#
+
 
 import struct, socket, sys, math, getopt, string, os.path, time, select, traceback
 from mutils import *

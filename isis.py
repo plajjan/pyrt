@@ -1,28 +1,29 @@
 #! /usr/bin/env python2.5
 
-##     PyRT: Python Routeing Toolkit
+# PyRT: Python Routeing Toolkit
+#
+# ISIS module: provides ISIS listener and ISIS PDU parsers
+#
+# Copyright (C) 2001 Richard Mortier <mort@sprintlabs.com>, Sprint ATL
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License as
+# published by the Free Software Foundation; either version 2 of the
+# License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+# 02111-1307 USA
 
-##     ISIS module: provides ISIS listener and ISIS PDU parsers
-
-##     Copyright (C) 2001 Richard Mortier <mort@sprintlabs.com>, Sprint ATL
-
-##     This program is free software; you can redistribute it and/or
-##     modify it under the terms of the GNU General Public License as
-##     published by the Free Software Foundation; either version 2 of the
-##     License, or (at your option) any later version.
-
-##     This program is distributed in the hope that it will be useful,
-##     but WITHOUT ANY WARRANTY; without even the implied warranty of
-##     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-##     General Public License for more details.
-
-##     You should have received a copy of the GNU General Public License
-##     along with this program; if not, write to the Free Software
-##     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
-##     02111-1307 USA
 
 # refs: http://www.rware.demon.co.uk/isis.htm, RFC1195, RFC1142,
-
+#
 # This is a good deal grimmer than the BGP module since ISIS, by default on
 # Ethernet/802.3 links, is encapsulated directly within the frame.  As a
 # consequence we need PF_PACKET and SOCK_RAW to get it -- THESE ARE ONLY
@@ -30,40 +31,40 @@
 # like.  Stick to Linux 2.2.x and higher kernels with packet sockets
 # (CONFIG_PACKET) enabled; I've tested on RH7.1 std. install.  Also, it must
 # run as root :-((
-
+#
 # Explanation of which bits we slurp: we are looking for ISIS packets carried
 # in IEEE 802.3 frames.  This means that we have the following octet layout:
-
+#
 # MAC header (IEEE 802.3):
-
+#
 #   ss-ss-ss-ss-ss-ss :: <6:src MAC>
 #   dd-dd-dd-dd-dd-dd :: <6:dst MAC>
 #   ll-ll             :: <2:length> == 0x05dc == 1500 (payload only)
-
+#
 # LLC header (IEEE 802.2):
 #   dsap :: <1:DSAP> == 0xfe ...by RFC1340, p53, "IEEE 802 Numbers of interest" 
 #   ssap :: <1:SSAP> == 0xfe ...("ISO CLNS IS 8473")
 #   ctrl :: <1 or 2: control> == 0x03 ("unnumbered information")
-
+#
 # In fact, from (after some moulinexing :-)
 # http://cell-relay.indiana.edu/cell-relay/docs/rfc/1483/1483.4.1.html
-
+#
 # In LLC Encapsulation the protocol of the routed PDU is identified by
 # prefixing the PDU by an IEEE 802.2 LLC header, which is possibly followed by
 # an IEEE 802.1a SubNetwork Attachment Point (SNAP) header. ...  The presence
 # of a SNAP header is indicated by the LLC header value 0xAA-AA-03.
-
+#
 # ...
-
+#
 # The LLC header value 0xFE-FE-03 identifies that a routed ISO PDU (see [6]
 # and Appendix B) follows. The Control field value 0x03 specifies Unnumbered
 # Information Command PDU.  ... The routed ISO protocol is identified by a one
 # octet NLPID field that is part of Protocol Data. NLPID values are
 # administered by ISO and CCITT. They are defined in ISO/IEC TR 9577 [6] and
 # some of the currently defined ones are listed in Appendix C.
-
+#
 # ...
-
+#
 # Appendix C. Partial List of NLPIDs
 #  0x00    Null Network Layer or Inactive Set (not used with ATM)
 #  0x80    SNAP
@@ -71,12 +72,12 @@
 #  0x82    ISO ESIS
 #  0x83    ISO ISIS
 #  0xCC    Internet IP
-
+#
 # ie. we have 14 octets MAC header, 3 octets LLC header, and then we are in
 # the ISIS packet, starting with the NLPID 0x83.  Phew.
-
+#
 # Note 1: AFI 49 (pfx on area code) is public CLNS space a la 10.x.x.x in IP
-
+#
 # Note 2: Actually, although the intro. above says this is grimmer, it is in
 # fact quite a lot nicer once adjacency is established.  ISIS is a much nicer
 # protocol than BGP which sucks high vacuum.
