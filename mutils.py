@@ -19,9 +19,6 @@
 # this program; if not, write to the Free Software Foundation, Inc., 59 Temple
 # Place, Suite 330, Boston, MA 02111-1307 USA
 
-#
-# $Id: mutils.py,v 1.11 2002/02/26 01:57:03 mort Exp $
-#
 
 import string, struct, sys
 

@@ -330,9 +330,3 @@
    ** write buffering
    ** bgp: support multiple peering sessions
    ** isis: fix the finding of the IP address (ie. make -i obsolete)
-
-========================================================================
-
-$Id: README,v 1.15 2002/01/23 23:17:17 mort Exp $
-
-========================================================================

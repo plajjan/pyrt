@@ -324,9 +324,3 @@
    subtype is then the OSPF message type.  As for ISIS2, the
    type-specific header contains just the extended timestamp in us,
    and is followed by the _IP_ (not raw ethernet) PDU.
-
-========================================================================
-
-$Id: README.mrtd,v 1.7 2002/02/26 01:57:03 mort Exp $
-
-========================================================================
