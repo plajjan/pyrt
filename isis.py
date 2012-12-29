@@ -1,4 +1,4 @@
-#! /usr/bin/env python2.5
+#! /usr/bin/env python
 
 # PyRT: Python Routeing Toolkit
 #
@@ -976,7 +976,7 @@ class Isis:
 
 
     def mkMacHdr(self, dst_mac, src_mac):
-        """ TODO: write me
+        """ Build a 802.3 MAC header
         """
         hdr = struct.pack(">6s 6s H 3B ", dst_mac, src_mac, ISIS_PKT_LEN,
                           ISIS_LLC_HDR[0], ISIS_LLC_HDR[1], ISIS_LLC_HDR[2])
@@ -985,7 +985,7 @@ class Isis:
 
 
     def mkIsisHdr(self, msg_type, hdr_len):
-        """ TODO: write me
+        """ Build an IS-IS header
         """
         nlpid = NLPIDS["ISIS"]
         ret   = struct.pack("8B", nlpid, hdr_len, Isis._version_proto_id,
@@ -995,7 +995,7 @@ class Isis:
 
 
     def mkIshHdr(self, circuit, src_id, holdtimer, pdu_len, prio, lan_id):
-        """ TODO: write me
+        """ Build an IS-IS Hello (IIH) header
         """
         ret = struct.pack(">B 6s H H B 7s",
                           circuit, src_id, holdtimer, pdu_len, prio, lan_id)
@@ -1037,7 +1037,16 @@ class Isis:
 
 
     def mkIsh(self, ln, lan_id, holdtimer):
-        """ TODO: write me
+        """ Build an IS-IS Hello (IIH) packet
+
+            ln [xxx]
+                TODO: What's this?
+
+            lan_id [xxx]
+                TODO: What's this?
+
+            holdtimer [integer]
+                The holdtimer
         """
 
         isns = []
