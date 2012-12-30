@@ -120,19 +120,19 @@ NLPIDS = { 0x00L: "NULL",
            }
 DLIST = DLIST + [NLPIDS]
 
-MSG_TYPES = { 0L:  "NULL",
-              2L:  "ESH",
-              4L:  "ISH",
-              6L:  "RD",
-              15L: "L1LANHello",
-              16L: "L2LANHello",
-              17L: "PPHello",
-              18L: "L1LSP",
-              20L: "L2LSP",
-              24L: "L1CSN",
-              25L: "L2CSN",
-              26L: "L1PSN",
-              27L: "L2PSN",
+MSG_TYPES = { 0L:  "NULL",          #
+              2L:  "ESH",           # End-System Hello
+              4L:  "ISH",           # IS Hello
+              6L:  "RD",            #
+              15L: "L1LANHello",    #
+              16L: "L2LANHello",    #
+              17L: "PPHello",       # point-to-point hello
+              18L: "L1LSP",         # L1 Link State PDU
+              20L: "L2LSP",         # L2 Link State PDU
+              24L: "L1CSN",         #
+              25L: "L2CSN",         #
+              26L: "L1PSN",         # L1 Pseudo-Node
+              27L: "L2PSN",         # L2 Pseudo-Node
               }
 DLIST = DLIST + [MSG_TYPES]
 
@@ -238,7 +238,7 @@ def parseMacHdr(pkt):
 
 
 def parseIsisHdr(pkt):
-    """ TODO: write me
+    """ Parse an IS-IS header
     """
     (nlpid, hdr_len, ver_proto_id, resvd, msg_type, ver, eco, user_eco) =\
             struct.unpack(">8B", pkt[0:ISIS_HDR_LEN])
@@ -376,7 +376,7 @@ def parseIsisMsg(msg_len, msg, verbose=1, level=0):
 
 
 def parseIsisIsh(msg_len, msg, verbose=1, level=0):
-    """ TODO: write me
+    """ Parse IS-IS Hello Message
     """
 
     (circuit_type, src_id, holdtimer,
